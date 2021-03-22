@@ -22,7 +22,14 @@ else:
     print("Connecting to the broker: localhost")
 client.loop_start()
 
-client.publish("test/status", "Hello world from paho-mqtt", 0)
+
+client.publish("test/status", "jack,25", 0)
+
+client.publish("test/status", "joey,20", 0)
+client.publish("test/status", "ling,30", 0)
+client.publish("test/status", "jack,25", 0)
+client.publish("test/status", "joey,20", 0)
+client.publish("test/status", "ling,30", 0)
 
 client.loop_stop()
 client.disconnect()
