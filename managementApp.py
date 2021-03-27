@@ -1,11 +1,14 @@
 # simple example for mqtt publisher
 import paho.mqtt.client as mqtt
 import sys 
+import time
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connection Ok!")
+        print("Input message format: name,temperature ")
+        print("Example: John,25.3 ")
     else: 
         print("Bad connected with result code "+str(rc))
 
@@ -23,7 +26,8 @@ else:
 while True:
     # Start loop 
     client.loop_start()
-
+    time.sleep(1)
+    
     # Message format : jack,23
     client.publish("mqtt/app", input('Message : '), 0)
 

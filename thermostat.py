@@ -2,9 +2,10 @@
 import paho.mqtt.client as mqtt
 import sys 
 memory = {}     # Dictionary of people name and preferred temperature
-present = []    # Dictionary of people name and their presenting status
+present = []    # List of people name and their presenting status
 
-# TODO: catch specitial case such input "jack1"
+# XXX: Condition:
+#      If re-enter the same name with different temperature, it will update the memory (Edit).
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -12,43 +13,73 @@ def on_message(client, userdata, msg):
 
 
 def on_message_app(client, userdata, msg):
-    # msg.payload format: (name,temperature)
-    info = msg.payload.decode().split(",")
-    print("received: " , info[0] + " prefer " + info[1] + " degrees. ")
-    memory[info[0]] = float(info[1])
+    try:
+        # msg.payload format: (name,temperature)
+        info = msg.payload.decode().split(",")
+        print("received: " , info[0] + " prefer " + info[1] + " degrees. ")
+        memory[info[0]] = float(info[1])
+
+    except Exception as e: 
+        print(e)
 
 
 def on_message_door(client, userdata, msg):
-    # msg.payload format: (name,present_status)
-    info = msg.payload.decode().split(",")
-    print("received: " , info[0] + " with status of " + info[1])
+    try:
+        # msg.payload format: (name,present_status)
+        info = msg.payload.decode().split(",")
+        print("received: " , info[0] + " with status of " + info[1])
 
-    # Check present list
-    # People enter the room
-    if info[1] == "0":
-        present.append(info[0])
-    # People leave the room
-    elif info[1] == "1":
-        present.remove(info[0])
-    else:
-        pass
-
-    totalTemp = 0.0
-    for x in present:
-        if x in memory:
-            totalTemp += memory[x]
+        # Check present list
+        if checkNameInPresent(info[0]):
+            if info[1] == "1":
+                present.remove(info[0])
+            else:
+                pass
         else:
-            pass
+            # People enter the room
+            if info[1] == "0":
+                if checkNameInApp(info[0]):
+                    present.append(info[0])
+                else:
+                    print(info[0] + " has no temperature record.")
+            # People leave the room
+            elif info[1] == "1":
+                print(info[0] + " is not in the room.")
+            else:
+                pass
 
-    # If house is empty set to 15, otherwise find average
-    if len(present) == 0:
-        avg = 15
+        totalTemp = 0.0
+        for x in present:
+            if x in memory:
+                totalTemp += memory[x]
+            else:
+                pass
+
+        # If house is empty set to 15, otherwise find average
+        if len(present) == 0:
+            avg = 15
+        else:
+            avg = totalTemp / len(present)
+
+        print("people in the room: " , present)
+        print("average temperature: " , avg)
+    
+    except Exception as e: 
+        print(e)
+
+# Check if we have the name in memory dictionary       
+def checkNameInApp(name):
+    if name in memory:
+        return True
     else:
-        avg = totalTemp / len(present)
+        return False
 
-    print("people in the room: " , present)
-    print("average temperature: " , avg)
-
+# Check if we have the name in present list       
+def checkNameInPresent(name):
+    if name in present:
+        return True
+    else:
+        return False
 
 client = mqtt.Client()
 

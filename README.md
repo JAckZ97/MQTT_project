@@ -13,5 +13,4 @@ Download: https://mosquitto.org/download/
 ### pip intstall list
 ```
 pip install paho-mqtt
-pip install pyyaml
 ```
