@@ -21,7 +21,7 @@ class DatabaseController:
         self.dbTemp = "temperature"
 
         # reset the database
-        self.reset_database()
+        self.resetDatabase()
 
 
     def resetDatabase(self):
@@ -39,10 +39,12 @@ class DatabaseController:
             
             if database[self.dbUser] != None:
                 for k, v in database[self.dbUser].items():
-                    nameList.append(database[self.dbUser][k][self.dbName])
-                    # print(nameList)
+                    if database[self.dbUser][k][self.dbName] == "default":
+                        pass
+                    else:
+                        nameList.append(database[self.dbUser][k][self.dbName])
+                        print(nameList)
                 return nameList
-
             else:
                 return []
     
@@ -118,7 +120,8 @@ class DatabaseController:
 # db.resetDatabase()
 # db.getExistingUsers()
 # db.readNamedTemperature("default1")
-# db.checkExistUser("default1")
+# print(db.checkExistUser("default1"))
 # db.addUser("jack", 24.6)
-# db.addUser("default", 24.6)
+# db.addUser("john", 25.0)
+# db.getExistingUsers()
 # db.deleteUser("jack")

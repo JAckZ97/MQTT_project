@@ -1,5 +1,4 @@
 # simple example for mqtt publisher
-
 import paho.mqtt.client as mqtt
 import sys 
 
@@ -10,26 +9,25 @@ def on_connect(client, userdata, flags, rc):
     else: 
         print("Bad connected with result code "+str(rc))
 
+# Construtor
 client = mqtt.Client()
 
 # Bind call back function
 client.on_connect = on_connect
-
 if client.connect("localhost", 1883, 60) != 0:
     print("Not able to connect to MQTT broker.")
     sys.exit(-1)
 else: 
     print("Connecting to the broker: localhost")
-client.loop_start()
 
+while True:
+    # Start loop 
+    client.loop_start()
 
-client.publish("test/status", "jack,25", 0)
+    # Message format : jack,23
+    client.publish("mqtt/app", input('Message : '), 0)
 
-client.publish("test/status", "joey,20", 0)
-client.publish("test/status", "ling,30", 0)
-client.publish("test/status", "jack,25", 0)
-client.publish("test/status", "joey,20", 0)
-client.publish("test/status", "ling,30", 0)
+    # Stop loop and disconnect
+    client.loop_stop()
 
-client.loop_stop()
 client.disconnect()
