@@ -6,6 +6,7 @@ present = []    # List of people name and their presenting status
 
 # XXX: Condition:
 #      If re-enter the same name with different temperature, it will update the memory (Edit).
+# TODO: Add condition check for tempreature range (0 to 35 degree)
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
