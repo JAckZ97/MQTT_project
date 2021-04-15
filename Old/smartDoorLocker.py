@@ -2,13 +2,14 @@
 import paho.mqtt.client as mqtt
 import sys 
 import time
-# TODO: subscribe locker topic to receive enter message
+
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connection Ok!")
-        print("Input message format: name,temperature ")
-        print("Example: John,25.3 ")
+        print("Input message format: name,0 or name,1 ")
+        print("Example: John,0 represent John entered room ")
+        print("Example: John,1 represent John left room ")
     else: 
         print("Bad connected with result code "+str(rc))
 
@@ -24,12 +25,14 @@ else:
     print("Connecting to the broker: localhost")
 
 while True:
-    # Start loop 
+    # Start loop    
     client.loop_start()
     time.sleep(1)
     
-    # Message format : jack,23
-    client.publish("mqtt/app", input('Message : '), 0)
+    # Message format : jack,0
+    # jack,0 : jack entered
+    # jack,1 : jack left
+    client.publish("mqtt/door", input('Who is entered/left: '), 0)
 
     # Stop loop and disconnect
     client.loop_stop()

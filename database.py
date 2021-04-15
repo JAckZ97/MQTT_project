@@ -116,7 +116,7 @@ class DatabaseController:
             return False
 
 
-# db = DatabaseController()
+db = DatabaseController()
 # db.resetDatabase()
 # db.getExistingUsers()
 # db.readNamedTemperature("default1")
