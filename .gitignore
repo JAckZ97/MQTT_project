@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+mqtt
+.vscode
+temp
+Non_use
+Old_code
+temp_new
+
