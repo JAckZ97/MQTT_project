@@ -1,4 +1,3 @@
-# simple example for mqtt publisher
 import paho.mqtt.client as mqtt
 import sys 
 import time

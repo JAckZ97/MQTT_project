@@ -43,7 +43,7 @@ class DatabaseController:
                         pass
                     else:
                         nameList.append(database[self.dbUser][k][self.dbName])
-                        print(nameList)
+                        # print(nameList)
                 return nameList
             else:
                 return []
@@ -62,24 +62,27 @@ class DatabaseController:
     # update the yaml file by adding the newest registered user
     def addUser(self, userName, userTemp):
         
-        if not self.checkExistUser(userName):
+        if not userName == "default":
+            if not self.checkExistUser(userName):
 
-            # updater database
-            # add user to name list
-            userNameList = userName
+                # updater database
+                # add user to name list
+                userNameList = userName
 
-            # add user to database
-            with open(self.dbFile,'r') as yamlfile:
-                databaseUpdate = yaml.safe_load(yamlfile) # Note the safe_load
-                databaseUpdate[self.dbUser].update({hash(userName): {self.dbName:userName, self.dbTemp:userTemp}})
+                # add user to database
+                with open(self.dbFile,'r') as yamlfile:
+                    databaseUpdate = yaml.safe_load(yamlfile) # Note the safe_load
+                    databaseUpdate[self.dbUser].update({hash(userName): {self.dbName:userName, self.dbTemp:userTemp}})
 
-            if databaseUpdate:
-                with open(self.dbFile,'w') as yamlfile:
-                    yaml.safe_dump(databaseUpdate, yamlfile) # Also note the safe_dump
-            return True
+                if databaseUpdate:
+                    with open(self.dbFile,'w') as yamlfile:
+                        yaml.safe_dump(databaseUpdate, yamlfile) # Also note the safe_dump
+                return True
+            else:
+                print("User already exists. ")
+                return False
         else:
-            print("user already exists")
-            return False
+            print("Please choose proper name. ")
     
 
     def deleteUser(self, userName):
@@ -116,12 +119,13 @@ class DatabaseController:
             return False
 
 
-db = DatabaseController()
+# Testing:
+# db = DatabaseController()
 # db.resetDatabase()
 # db.getExistingUsers()
 # db.readNamedTemperature("default1")
 # print(db.checkExistUser("default1"))
-# db.addUser("jack", 24.6)
+# db.addUser("default", 24.6)
 # db.addUser("john", 25.0)
 # db.getExistingUsers()
 # db.deleteUser("jack")
