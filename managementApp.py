@@ -34,7 +34,7 @@ def on_message_door(client, userdata, msg):
                 new_temp = db.readNamedTemperature(info[0])
                 temp_data = info[0] + "," + str(new_temp)
             else:
-                temp_data = "User inforamtion not exist. "
+                temp_data = info[0] + ",not"
         else:
             pass
 
@@ -48,8 +48,6 @@ def storeInDatabase(name, temperature):
 
 def publishToDB():
     while True:
-        # Start loop 
-        client.loop_start()
         time.sleep(1)
         
         # Message format : John,25.3
@@ -67,21 +65,16 @@ def publishToDB():
         except Exception as e: 
             print(e)
 
-        # Stop loop and disconnect
-        client.loop_stop()
-
 
 def subscribeToDoorLock():
     # Subscribe doorLocker topic
     client.subscribe("mqtt/door", 0)
     client.on_message = on_message_door
-    client.loop_forever()
 
 
 def publishToThermo():
     global temp_data_old
     while True:
-        client.loop_start()
         time.sleep(1)
 
         if temp_data_old != temp_data:
@@ -90,8 +83,6 @@ def publishToThermo():
             temp_data_old = temp_data
         else:
             pass
-
-        client.loop_stop()
 
 
 # Bind call back function
@@ -108,6 +99,8 @@ y = threading.Thread(target=subscribeToDoorLock)
 y.start()
 z = threading.Thread(target=publishToThermo)
 z.start()
+
+client.loop_forever()
 
 x.join()
 y.join()

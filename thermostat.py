@@ -15,12 +15,11 @@ def on_message(client, userdata, msg):
 
 def on_message_app(client, userdata, msg):
     try:
-        notExistInfo = msg.payload.decode()
-        if notExistInfo == "User inforamtion not exist. ":
-            print("User inforamtion not exist. ")
+        # msg.payload format: (name,temperature)
+        infoApp = msg.payload.decode().split(",")
+        if infoApp[1] == "not":
+            print("User information not exist. ")
         else:
-            # msg.payload format: (name,temperature)
-            infoApp = msg.payload.decode().split(",")
             print("Received: " , infoApp[0] + " prefer " + infoApp[1] + " degrees. ")
             with lock:
                 memory[infoApp[0]] = float(infoApp[1])
