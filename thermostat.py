@@ -15,13 +15,17 @@ def on_message(client, userdata, msg):
 
 def on_message_app(client, userdata, msg):
     try:
-        # msg.payload format: (name,temperature)
-        infoApp = msg.payload.decode().split(",")
-        print("Received: " , infoApp[0] + " prefer " + infoApp[1] + " degrees. ")
-        with lock:
-            memory[infoApp[0]] = float(infoApp[1])
-        
-        calculateTemp()
+        notExistInfo = msg.payload.decode()
+        if notExistInfo == "User inforamtion not exist. ":
+            print("User inforamtion not exist. ")
+        else:
+            # msg.payload format: (name,temperature)
+            infoApp = msg.payload.decode().split(",")
+            print("Received: " , infoApp[0] + " prefer " + infoApp[1] + " degrees. ")
+            with lock:
+                memory[infoApp[0]] = float(infoApp[1])
+            
+            calculateTemp()
 
     except Exception as e: 
         print(e)
@@ -33,9 +37,9 @@ def on_message_door(client, userdata, msg):
         # msg.payload format: (name,present_status)
         info = msg.payload.decode().split(",")
         if info[1] == "0":
-            print("Received: " , info[0] + " is entered. ")
+            print("Received: " + info[0] + " with the status of " + info[1])
         elif info[1] == "1":
-            print("Received: " , info[0] + " is left. ")
+            print("Received: " + info[0] + " with the status of " + info[1])
             calculateTemp()
         else:
             pass

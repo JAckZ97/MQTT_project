@@ -34,7 +34,7 @@ def on_message_door(client, userdata, msg):
                 new_temp = db.readNamedTemperature(info[0])
                 temp_data = info[0] + "," + str(new_temp)
             else:
-                print("User does not exist. ")
+                temp_data = "User inforamtion not exist. "
         else:
             pass
 
